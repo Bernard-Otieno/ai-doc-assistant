@@ -1,0 +1,16 @@
+/* src/components/DocumentViewer.css */
+.document-viewer {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+}
+
+.column {
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 15px;
+  background: #f9f9f9;
+  overflow: auto;
+  max-height: 500px;
+}
