@@ -127,14 +127,28 @@ function App() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    if (file.type === 'application/pdf') {
-      handlePDFUpload(file);
-    } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-      handleDocxUpload(file);
-    } else {
-      handleTextUpload(file);
-    }
+  
+    setStatus('loading'); // show spinner
+    setOriginalText('');
+    setSuggestions([]);
+    if (canvasContainerRef.current) canvasContainerRef.current.innerHTML = '';
+    if (docxContainerRef.current) docxContainerRef.current.innerHTML = '';
+  
+    const process = async () => {
+      if (file.type === 'application/pdf') {
+        await handlePDFUpload(file);
+      } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        await handleDocxUpload(file);
+      } else {
+        await handleTextUpload(file);
+      }
+      setStatus('done'); // hide spinner
+    };
+  
+    process();
   };
+  
+  
 
   const handleAccept = (id) => {
     setSuggestions(prev => prev.map(item =>
@@ -206,6 +220,10 @@ function App() {
       <div className="file-upload">
         <label htmlFor="fileInput" className="upload-button">Choose a Document</label>
         <input id="fileInput" type="file" accept=".txt,.docx,.pdf" onChange={handleFileChange} style={{ display: 'none' }} />
+        {status === 'loading' && (
+        <div className="loading-message">⏳ Loading document and checking for suggestions...</div>
+)}
+
       </div>
   
       {originalText.length > MAX_CHAR_WARNING && (
@@ -225,18 +243,23 @@ function App() {
         </div>
 
         <div className="panel">
-          <div className="panel-header">Improved Text</div>
+          <div className="panel-header">Improved Text</div>  <div className="legend">
+        <strong>Legend:</strong>
+        <span className="legend-item suggestion">Suggestion</span>
+        <span className="legend-item accepted">Accepted</span>
+        <span className="legend-item rejected">Rejected</span>   
+        {/* {renderImprovedText()} */}
+      </div>
           <div className="panel-content">
             {renderImprovedText()}
           </div>
+            <div style={{ fontSize: '0.85rem', color: '#555' }}>
+    
+ 
+  </div>
         </div>
       </div>
-      <div className="legend">
-        <strong>Legend:</strong>
-        <span className="suggestion">Suggestion</span>
-        <span className="accepted">Accepted</span>
-        <span className="rejected">Rejected</span>
-      </div>
+      
 
     </div>
   );

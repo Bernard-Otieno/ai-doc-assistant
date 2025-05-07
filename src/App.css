@@ -30,23 +30,24 @@ input[type="file"] {
 .legend {
   font-size: 0.85rem;
   color: #555;
+  margin-bottom: 1rem;
 }
 
-.legend span {
-  padding: 4px 8px;
+.legend-item {
+  padding: 0 6px;
   margin-left: 8px;
   border-radius: 4px;
 }
 
-.legend .suggestion {
+.legend-item.suggestion {
   background-color: #fff59d;
 }
 
-.legend .accepted {
+.legend-item.accepted {
   background-color: #c8e6c9;
 }
 
-.legend .rejected {
+.legend-item.rejected {
   background-color: #ffcdd2;
 }
 
@@ -177,4 +178,13 @@ button {
 
 .upload-button:hover {
   background-color: #0056b3;
+}
+.loading-message {
+  padding: 10px;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
 }
