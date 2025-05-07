@@ -9,22 +9,28 @@ GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@5.2.133
 function App() {
   const [originalText, setOriginalText] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [status, setStatus] = useState('idle'); 
+  const [errorMessage, setErrorMessage] = useState('');
   const canvasContainerRef = useRef(null);
   const docxContainerRef = useRef(null);
 
   const MAX_CHAR_WARNING = 19000;
 
   const fetchSuggestionsFromAPI = async (text) => {
+    setStatus('loading');
+    setErrorMessage('');
     try {
       const response = await fetch('https://api.languagetoolplus.com/v2/check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ text, language: 'en-US' })
       });
+  
       const data = await response.json();
-
+      setStatus('success');
+  
       if (!data.matches.length) return ['Document appears to be fine. No suggestions.'];
-
+  
       const suggestionsArray = [];
       let lastIndex = 0;
       data.matches.forEach((match, index) => {
@@ -39,11 +45,15 @@ function App() {
       });
       suggestionsArray.push(text.slice(lastIndex));
       return suggestionsArray;
+  
     } catch (error) {
       console.error('LanguageTool API error:', error);
+      setStatus('error');
+      setErrorMessage('Error checking suggestions. Please try again later.');
       return ['Error checking suggestions. Please try again later.'];
     }
   };
+  
 
   const handleTextUpload = async (file) => {
     const reader = new FileReader();
@@ -199,6 +209,9 @@ function App() {
         <span style={{ backgroundColor: '#c8e6c9', padding: '0 6px', marginLeft: 8 }}>Accepted</span>
         <span style={{ backgroundColor: '#ffcdd2', padding: '0 6px', marginLeft: 8 }}>Rejected</span>
       </div>
+      {status === 'loading' && <div style={{ color: '#007bff' }}>Checking for suggestions...</div>}
+      {status === 'error' && <div style={{ color: 'red' }}>{errorMessage}</div>}
+
       <div style={{ display: 'flex', gap: '1rem', height: '400px' }}>
         <div style={{ width: '33%', border: '1px solid #ccc', overflowY: 'auto' }}>
           <div ref={canvasContainerRef} style={{ width: '100%' }} />
@@ -236,6 +249,6 @@ function App() {
       </div>
     </div>
   );
-}
 
+}
 export default App;
