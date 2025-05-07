@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist';
 import 'pdfjs-dist/build/pdf.worker';
 import * as docx from 'docx-preview';
+import '../src/App.css';
 
 GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@5.2.133/build/pdf.worker.mjs`;
 
@@ -182,6 +183,7 @@ function App() {
       }
 
       return (
+
         <span
           key={index}
           style={{ ...baseStyle, backgroundColor: '#fff59d', border: '1px solid #fbc02d', cursor: 'pointer' }}
@@ -196,59 +198,49 @@ function App() {
   };
 
   return (
-    <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <input type="file" accept=".txt,.docx,.pdf" onChange={handleFileChange} />
+    <div className="app-container">
+      <h1 className="app-title">AI Document Assistant</h1>
+      <p className="app-description">
+        Upload a document to view grammar suggestions side-by-side with the improved version. Supports PDF, DOCX, and TXT files.
+      </p>
+      <div className="file-upload">
+        <label htmlFor="fileInput" className="upload-button">Choose a Document</label>
+        <input id="fileInput" type="file" accept=".txt,.docx,.pdf" onChange={handleFileChange} style={{ display: 'none' }} />
+      </div>
+  
       {originalText.length > MAX_CHAR_WARNING && (
         <div style={{ color: 'red' }}>
           Warning: Document is too large. Please limit it to approximately 19,000 characters to ensure full analysis.
         </div>
       )}
-      <div style={{ fontSize: '0.85rem', color: '#555' }}>
-        <strong>Legend:</strong>
-        <span style={{ backgroundColor: '#fff59d', padding: '0 6px', marginLeft: 8 }}>Suggestion</span>
-        <span style={{ backgroundColor: '#c8e6c9', padding: '0 6px', marginLeft: 8 }}>Accepted</span>
-        <span style={{ backgroundColor: '#ffcdd2', padding: '0 6px', marginLeft: 8 }}>Rejected</span>
-      </div>
-      {status === 'loading' && <div style={{ color: '#007bff' }}>Checking for suggestions...</div>}
-      {status === 'error' && <div style={{ color: 'red' }}>{errorMessage}</div>}
+  
+  
+      <div className="split-view">
+        <div className="panel">
+          <div className="panel-header">Preview</div>
+          <div className="panel-content">
+            <div ref={canvasContainerRef} />
+            <div ref={docxContainerRef} />
+          </div>
+        </div>
 
-      <div style={{ display: 'flex', gap: '1rem', height: '400px' }}>
-        <div style={{ width: '33%', border: '1px solid #ccc', overflowY: 'auto' }}>
-          <div ref={canvasContainerRef} style={{ width: '100%' }} />
-          <div ref={docxContainerRef} style={{ width: '100%' }} />
-        </div>
-        <textarea
-          value={originalText}
-          readOnly
-          placeholder="Original Document"
-          style={{
-            width: '33%',
-            height: '100%',
-            resize: 'none',
-            border: '1px solid #ccc',
-            padding: '0.5rem',
-            overflowY: 'scroll',
-            fontFamily: 'monospace',
-            whiteSpace: 'pre-wrap'
-          }}
-        />
-        <div
-          style={{
-            width: '33%',
-            height: '100%',
-            border: '1px solid #ccc',
-            padding: '0.5rem',
-            overflowY: 'scroll',
-            backgroundColor: '#f9f9f9',
-            fontFamily: 'monospace',
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          {renderImprovedText()}
+        <div className="panel">
+          <div className="panel-header">Improved Text</div>
+          <div className="panel-content">
+            {renderImprovedText()}
+          </div>
         </div>
       </div>
+      <div className="legend">
+        <strong>Legend:</strong>
+        <span className="suggestion">Suggestion</span>
+        <span className="accepted">Accepted</span>
+        <span className="rejected">Rejected</span>
+      </div>
+
     </div>
   );
+  
 
 }
 export default App;
