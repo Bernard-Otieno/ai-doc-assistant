@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react'; // Importing React hooks
+import React, { useState, useRef } from 'react'; //React hooks
 import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist'; // PDF.js for reading PDF content
 import 'pdfjs-dist/build/pdf.worker'; // Include the PDF.js worker
-import * as docx from 'docx-preview'; // Library for rendering DOCX files in browser
-import '../src/App.css'; // Import app styles
+import * as docx from 'docx-preview'; // rendering DOCX files in browser
+import '../src/App.css'; 
 
 // Set PDF.js worker source from CDN
 GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@5.2.133/build/pdf.worker.mjs`;
@@ -14,13 +14,13 @@ function App() {
   const [status, setStatus] = useState('idle'); // Can be: idle, loading, success, error
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Refs for rendering document content visually
+  // rendering document content visually
   const canvasContainerRef = useRef(null); // PDF preview container
   const docxContainerRef = useRef(null);   // DOCX preview container
 
-  const MAX_CHAR_WARNING = 19000; // Max characters for suggestion API to work reliably
+  const MAX_CHAR_WARNING = 19000; // for API to work
 
-  // Calls the LanguageTool API to get grammar suggestions
+  // Call  LanguageTool API for suggestions
   const fetchSuggestionsFromAPI = async (text) => {
     setStatus('loading');
     setErrorMessage('');
