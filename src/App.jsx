@@ -225,7 +225,7 @@ function App() {
     });
   };
 
-  // App render output
+  //  output
   return (
     <div className="app-container">
       <h1 className="app-title">AI Document Assistant</h1>
