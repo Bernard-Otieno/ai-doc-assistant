@@ -210,7 +210,7 @@ function App() {
         );
       }
 
-      // Default suggestion (not yet accepted or rejected)
+      // Default state
       return (
         <span
           key={index}
